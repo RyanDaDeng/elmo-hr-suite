@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Log;
 class HomeController extends Controller
 {
 
+    /**
+     * @param Request $request
+     * @return array
+     */
     public function test(Request $request)
     {
 
@@ -21,9 +25,8 @@ class HomeController extends Controller
     }
 
     /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @param Request $request
+     * @return mixed|string
      */
     public function command(Request $request)
     {
@@ -33,9 +36,8 @@ class HomeController extends Controller
 
 
     /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @param Request $request
+     * @return LeaveInteractiveManager|array
      */
     public function interactive(Request $request)
     {
