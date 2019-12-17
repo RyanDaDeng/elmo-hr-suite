@@ -7,6 +7,14 @@
  */
 
 return [
-    'client_access_token' => 'xoxp-861305887042-875948373847-874092873056-a8bf314fa2538a31c3e6edaab4197dfe',
-    'bot_access_token' => ''
+    'awards' => [
+        'client_access_token' => env('AWARDS_SLACK_CLIENT_ACCESS_TOKEN', ''),
+        'bot_access_token'    => env('AWARDS_SLACK_BOT_ACCESS_TOKEN', ''),
+        'bot_user_id'         => 'URUC25N1L'
+    ],
+    'leave'  => [
+        'client_access_token' => env('LEAVE_SLACK_CLIENT_ACCESS_TOKEN', ''),
+        'bot_access_token'    => env('LEAVE_SLACK_BOT_ACCESS_TOKEN', ''),
+        'bot_user_id'         => ''
+    ]
 ];

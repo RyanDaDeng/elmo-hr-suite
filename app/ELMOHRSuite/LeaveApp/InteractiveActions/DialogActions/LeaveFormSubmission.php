@@ -27,7 +27,7 @@ class LeaveFormSubmission extends AbstractInteractive
     {
 
         $api = SlackClientApi::instance(
-            config('slack.client_access_token')
+            config('slack.leave.client_access_token')
         );
 
         $dialog = new LeaveFormView();

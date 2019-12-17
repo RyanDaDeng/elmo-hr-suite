@@ -9,6 +9,8 @@
 namespace App\ELMOHRSuite\Core\Commands;
 
 
+use App\ELMOHRSuite\Core\Helpers\SlackMessageFormatter;
+
 abstract class AbstractSlackCommand
 {
     /**
@@ -21,6 +23,11 @@ abstract class AbstractSlackCommand
      * @var string
      */
     protected $commandName = '';
+
+    /**
+     * @var string $description
+     */
+    protected $description = '';
 
     /**
      * AbstractSlackCommand constructor.
@@ -50,12 +57,39 @@ abstract class AbstractSlackCommand
     }
 
     /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
      * @return array|mixed
      */
     public function handle()
     {
         return $this->process();
 
+    }
+
+    public function menu($groupCommandName = '')
+    {
+        return [
+            [
+                'type' => 'section',
+                'text' => [
+                    'type' => 'mrkdwn',
+                    'text' => SlackMessageFormatter::withParagraphs(
+                        SlackMessageFormatter::inlineBoldText('/' . $groupCommandName . ' ' . $this->getCommandName()),
+                        '/' . $groupCommandName . ' ' . $this->getCommandName() . ': ' . $this->getDescription()
+                    )
+                ]
+            ],
+            [
+                'type' => 'divider'
+            ]
+        ];
     }
 
     /**

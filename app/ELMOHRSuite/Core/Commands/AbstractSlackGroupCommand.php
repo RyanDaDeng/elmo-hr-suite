@@ -9,10 +9,14 @@
 namespace App\ELMOHRSuite\Core\Commands;
 
 
+use App\ELMOHRSuite\Core\Helpers\SlackMessageFormatter;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 class AbstractSlackGroupCommand
 {
+
+    protected $groupCommandName = '';
 
     /**
      * @var array $payload
@@ -31,7 +35,7 @@ class AbstractSlackGroupCommand
 
     public function __construct($payload)
     {
-        $this->payload = $payload;
+        $this->payload    = $payload;
         $this->commandMap = $this->resolveCommands($this->commands);
     }
 
@@ -43,8 +47,33 @@ class AbstractSlackGroupCommand
         try {
             return $this->run();
         } catch (\Exception $exception) {
-            return $exception->getMessage();
+            return $this->getListOfCommandsInfo();
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getListOfCommandsInfo()
+    {
+        $blocks = Collection::make([
+            [
+                'type' => 'section',
+                'text' => [
+                    'type' => 'mrkdwn',
+                    'text' => SlackMessageFormatter::bold('A list of available commands:')
+                ]
+            ]
+        ]);
+
+        foreach ($this->commandMap as $key => $command) {
+            $blocks = $blocks->merge($command->menu($this->groupCommandName));
+        }
+        return
+            [
+                'text'   => 'A list of commands: ',
+                'blocks' => $blocks
+            ];
     }
 
     /**
@@ -68,7 +97,7 @@ class AbstractSlackGroupCommand
 
         $commandMap = [];
         foreach ($commands as $key => $command) {
-            $class = $this->resolve($command);
+            $class                                = $this->resolve($command);
             $commandMap[$class->getCommandName()] = $class;
         }
 

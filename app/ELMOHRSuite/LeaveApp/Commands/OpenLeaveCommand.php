@@ -38,7 +38,7 @@ class OpenLeaveCommand extends AbstractSlackCommand
         $leaveFormView = new LeaveFormView();
 
         SlackClientApi::instance(
-            config('slack.client_access_token')
+            config('slack.leave.client_access_token')
         )->openViews(
             $leaveFormView->template([
                 'trigger_id' => $this->payload['trigger_id']
