@@ -177,7 +177,8 @@ return [
 
 
 
-        \App\ELMOHRSuite\AwardApp\Providers\AwardsServiceProvider::class
+        \App\ELMOHRSuite\Apps\AwardApp\Providers\AwardsServiceProvider::class,
+        \App\ELMOHRSuite\Apps\LeaveApp\Providers\LeaveServiceProvider::class
     ],
 
     /*
