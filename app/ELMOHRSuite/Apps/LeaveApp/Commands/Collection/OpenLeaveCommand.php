@@ -6,7 +6,7 @@
  * Time: 4:16 PM
  */
 
-namespace App\ELMOHRSuite\Apps\LeaveApp\Commands;
+namespace App\ELMOHRSuite\Apps\LeaveApp\Commands\Collection;
 
 
 use App\ELMOHRSuite\Apps\LeaveApp\Views\LeaveFormView;
@@ -16,6 +16,7 @@ use App\ELMOHRSuite\Core\Commands\AbstractSlackCommand;
 class OpenLeaveCommand extends AbstractSlackCommand
 {
 
+    protected $description = 'create leave';
     /**
      * @var string $name
      */

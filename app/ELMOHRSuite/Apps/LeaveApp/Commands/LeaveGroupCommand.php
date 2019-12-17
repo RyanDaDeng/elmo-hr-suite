@@ -6,10 +6,10 @@
  * Time: 4:16 PM
  */
 
-namespace App\ELMOHRSuite\Apps\LeaveApp\GroupCommands;
+namespace App\ELMOHRSuite\Apps\LeaveApp\Commands;
 
 
-use App\ELMOHRSuite\Apps\LeaveApp\Commands\OpenLeaveCommand;
+use App\ELMOHRSuite\Apps\LeaveApp\Commands\Collection\OpenLeaveCommand;
 use App\ELMOHRSuite\Core\Commands\AbstractSlackGroupCommand;
 
 class LeaveGroupCommand extends AbstractSlackGroupCommand

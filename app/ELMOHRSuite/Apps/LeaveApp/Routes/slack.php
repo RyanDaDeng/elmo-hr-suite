@@ -13,7 +13,7 @@
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('apps/leave')
-    ->namespace('\App\ELMOHRSuite\Apps\AwardApp\Controllers')
+    ->namespace('\App\ELMOHRSuite\Apps\LeaveApp\Controllers')
     ->group(function () {
         Route::get('hello', 'SlackController@hello')->name('leave.hello');
         Route::post('command', 'SlackController@command')->name('leave.command');

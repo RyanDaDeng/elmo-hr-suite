@@ -14,7 +14,10 @@ class CookieInMessage extends AbstractSlackEvent
 {
 
     public $cookieCount = 0;
+
     public $mentionedUsers = [];
+
+    public $notificationChannel = 'CRSCFAWVB'; //todo hard-coded
 
     public function validate(): bool
     {
@@ -27,7 +30,7 @@ class CookieInMessage extends AbstractSlackEvent
         if ($this->cookieCount && $this->mentionedUsers && $event['channel_type'] === 'channel' &&
             $event['user'] != 'USLACKBOT' &&
             $event['user'] != config('slack.awards.bot_user_id') &&
-            $event['channel'] != 'CRSCFAWVB' //todo hard-coded
+            $event['channel'] != $this->notificationChannel
 
         ) {
             return true;
@@ -51,13 +54,13 @@ class CookieInMessage extends AbstractSlackEvent
 
         $slackBotApi->postMessage(
             [
-                'channel' => 'CRSCFAWVB',
+                'channel' => $this->notificationChannel,
                 'text'    =>
 
                     SlackMessageFormatter::paragraphs([
                             SlackMessageFormatter::mentionUserIds($this->mentionedUsers) .
                             ' received ' . SlackMessageFormatter::inlineBoldText($this->cookieCount) .
-                            ' cookie(s) from ' . SlackMessageFormatter::mentionUserId($event['user']),
+                            ' cookie(s) from ' . SlackMessageFormatter::mentionUserId($event['user']) . ' in channel ' . SlackMessageFormatter::mentionChannel($event['channel']),
                             SlackMessageFormatter::quote(SlackMessageFormatter::italic(SlackMessageFormatter::mentionUserId($event['user'])) . ': ' . $event['text'])
                         ]
                     )

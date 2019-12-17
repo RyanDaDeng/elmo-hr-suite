@@ -3,8 +3,7 @@
 
 namespace App\ELMOHRSuite\Apps\LeaveApp\Controllers;
 
-
-use App\ELMOHRSuite\Apps\LeaveApp\GroupCommands\LeaveGroupCommand;
+use App\ELMOHRSuite\Apps\LeaveApp\Commands\LeaveGroupCommand;
 use App\ELMOHRSuite\Apps\LeaveApp\InteractiveActions\LeaveInteractiveManager;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
