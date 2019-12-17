@@ -16,5 +16,10 @@ return [
         'client_access_token' => env('LEAVE_SLACK_CLIENT_ACCESS_TOKEN', ''),
         'bot_access_token'    => env('LEAVE_SLACK_BOT_ACCESS_TOKEN', ''),
         'bot_user_id'         => ''
+    ],
+    'sample'  => [
+        'client_access_token' => env('SAMPLE_SLACK_CLIENT_ACCESS_TOKEN', ''),
+        'bot_access_token'    => env('SAMPLE_SLACK_BOT_ACCESS_TOKEN', ''),
+        'bot_user_id'         => ''
     ]
 ];
