@@ -4,13 +4,14 @@
 namespace App\ELMOHRSuite\Apps\AwardApp\Controllers;
 
 use App\ELMOHRSuite\Apps\AwardApp\Commands\AwardsGroupCommand;
+use App\ELMOHRSuite\Apps\AwardApp\Commands\Collection\OpenAwardCommand;
 use App\ELMOHRSuite\Apps\AwardApp\Events\AwardsEventManager;
+use App\ELMOHRSuite\Apps\AwardApp\InteractiveActions\AwardInteractiveManager;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class SlackController extends Controller
 {
-
     /**
      * @return string
      */
@@ -34,7 +35,12 @@ class SlackController extends Controller
      */
     public function command(Request $request)
     {
+        // return (new AwardsGroupCommand($request->all()))->execute();
+        return (new OpenAwardCommand($request->all()))->execute();
+    }
 
-        return (new AwardsGroupCommand($request->all()))->execute();
+    public function interactive(Request $request)
+    {
+        return (new AwardInteractiveManager(json_decode($request->all()['payload'], 1)))->process();
     }
 }

@@ -18,4 +18,5 @@ Route::prefix('apps/leave')
         Route::get('hello', 'SlackController@hello')->name('leave.hello');
         Route::post('command', 'SlackController@command')->name('leave.command');
         Route::post('interactive', 'SlackController@interactive')->name('leave.interactive');
+        Route::post('calendar-insert', 'SlackController@calendarInsert')->name('leave.calendar-insert');
     });
