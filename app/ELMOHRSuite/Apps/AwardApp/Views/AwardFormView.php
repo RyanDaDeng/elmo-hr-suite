@@ -58,26 +58,26 @@ class AwardFormView extends AbstractSlackView
                                         [
                                             'text' => [
                                                 'type' => 'plain_text',
-                                                'text' => 'Team Recognition',
+                                                'text' => ':cookie: Team Recognition',
                                                 'emoji' => true
                                             ],
-                                            'value' => 'value-1'
+                                            'value' => '0'
                                         ],
                                         [
                                             'text' => [
                                                 'type' => 'plain_text',
-                                                'text' => 'High Performer',
+                                                'text' => ':first_place_medal: High Performer',
                                                 'emoji' => true
                                             ],
-                                            'value' => 'value-2'
+                                            'value' => '1'
                                         ],
                                         [
                                             'text' => [
                                                 'type' => 'plain_text',
-                                                'text' => 'EOTM',
+                                                'text' => ':trophy: Employee of the Month',
                                                 'emoji' => true
                                             ],
-                                            'value' => 'value-2'
+                                            'value' => '2'
                                         ]
                                     ]
                                 ],
@@ -106,7 +106,13 @@ class AwardFormView extends AbstractSlackView
                             [
                                 'type' => 'input',
                                 'element' => [
-                                    'type' => 'plain_text_input'
+                                    'type' => 'plain_text_input',
+                                    'max_length' => 2,
+                                    'placeholder' => [
+                                        'type' => 'plain_text',
+                                        'text' => 'Quantity',
+                                        'emoji' => true
+                                    ]
                                 ],
                                 'label' => [
                                     'type' => 'plain_text',
@@ -118,7 +124,12 @@ class AwardFormView extends AbstractSlackView
                                 'type' => 'input',
                                 'element' => [
                                     'type' => 'plain_text_input',
-                                    'multiline' => true
+                                    'multiline' => true,
+                                    'placeholder' => [
+                                        'type' => 'plain_text',
+                                        'text' => 'I am giving this person kudos because...',
+                                        'emoji' => true
+                                    ]
                                 ],
                                 'label' => [
                                     'type' => 'plain_text',
