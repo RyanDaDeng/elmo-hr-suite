@@ -9,6 +9,7 @@
 namespace App\ELMOHRSuite\Apps\LeaveApp\InteractiveActions\BlockActions;
 
 use App\ELMOHRSuite\Core\InteractiveManager\AbstractInteractive;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Response;
 
 class LeaveDeclinedAction extends AbstractInteractive
@@ -30,6 +31,13 @@ class LeaveDeclinedAction extends AbstractInteractive
 
         // todo
 
-        return Response::json([], 200);
+        $data = json_decode($this->payload['actions'][0]['value'], true);
+        $data['approvalStatus'] = 2;
+        $data  = base64_encode(json_encode($data));
+
+        $client = new Client(['verify' => false ]);
+        $res = $client->get('https://dev.local.elmodev.com/api/v0/form/entity-choice?data='. $data);
+
+        return Response::json(['1234'], 200);
     }
 }

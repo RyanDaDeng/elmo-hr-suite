@@ -105,6 +105,9 @@ class LeaveFormSubmission extends AbstractInteractive
 
         $endDate = date('d/m/Y', strtotime("+ {$data['days']} day", strtotime($data['start_date'])));
 
+        $payloadData = [
+            'data' => $data
+        ];
         $slackBotApi->postMessage(
             [
                 'as_user' => true,
@@ -162,7 +165,7 @@ Kind Regards, ELMO HR Team",
                                                     'emoji' => true,
                                                 ),
                                             'style'     => 'primary',
-                                            'value'     => 'click_me_123', //todo,
+                                            'value'     => json_encode($data), //todo,
                                             'action_id' => Store::LEAVE_APPROVED_ACTION
                                         ),
                                     1 =>
@@ -175,7 +178,7 @@ Kind Regards, ELMO HR Team",
                                                     'emoji' => true,
                                                 ),
                                             'style'     => 'danger',
-                                            'value'     => 'click_me_123',
+                                            'value'     => json_encode($data)  ,
                                             'action_id' => Store::LEAVE_DECLINED_ACTION
                                         ),
                                 ),
