@@ -1,0 +1,41 @@
+#!/usr/bin/env sh
+# Helpful shell scripts
+
+# Start in web dir
+cd /var/www/survey-backend
+
+# Load git prompt script
+source /etc/profile.d/color_prompt
+
+
+# Colours
+C_MSG='\033[1;32;40m' # green-on-black
+C_NORM='\033[0m' # reset
+
+# Hard enable xdebug
+php_xdebug_on()
+{
+    sudo cp /usr/local/etc/php/mods-available/xdebug.ini /usr/local/etc/php
+    sudo supervisorctl restart php-fpm
+    printf "${C_MSG}PHP XDEBUG: Enabled${C_NORM}\n"
+}
+alias xdebug-on=php_xdebug_on
+
+# Hard disable xdebug
+php_xdebug_off()
+{
+    sudo rm -f /usr/local/etc/php/xdebug.ini
+    sudo supervisorctl restart php-fpm
+    printf "${C_MSG}PHP XDEBUG: Disabled${C_NORM}\n"
+}
+alias xdebug-off=php_xdebug_off
+
+
+# LS colours
+export LS_COLORS='di=1:fi=0:ln=31:pi=5:so=5:bd=5:cd=5:or=31:mi=0:ex=35:*.rpm=90'
+export LS_OPTIONS='--color=auto'
+
+# LS extensions (ls, ll, l)
+alias ls='ls $LS_OPTIONS'
+alias ll='ls $LS_OPTIONS -l'
+alias l='ls $LS_OPTIONS -lA'
