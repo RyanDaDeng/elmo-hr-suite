@@ -3,6 +3,7 @@
 namespace App\ELMOHRSuite\Apps\AwardApp\Views;
 
 use App\ELMOHRSuite\Apps\AwardApp\InteractiveActions\Store;
+use App\ELMOHRSuite\Apps\AwardApp\Models\Award;
 use App\ELMOHRSuite\Core\Views\AbstractSlackView;
 
 class AwardFormView extends AbstractSlackView
@@ -46,6 +47,7 @@ class AwardFormView extends AbstractSlackView
                     'blocks' =>
                         [
                             [
+                                'block_id' => 'category',
                                 'type' => 'input',
                                 'element' => [
                                     'type' => 'static_select',
@@ -61,7 +63,7 @@ class AwardFormView extends AbstractSlackView
                                                 'text' => ':cookie: Team Recognition',
                                                 'emoji' => true
                                             ],
-                                            'value' => '0'
+                                            'value' => Award::TEAM_RECOGNITION
                                         ],
                                         [
                                             'text' => [
@@ -69,7 +71,7 @@ class AwardFormView extends AbstractSlackView
                                                 'text' => ':first_place_medal: High Performer',
                                                 'emoji' => true
                                             ],
-                                            'value' => '1'
+                                            'value' => Award::HIGH_PERFORMANCE
                                         ],
                                         [
                                             'text' => [
@@ -77,9 +79,10 @@ class AwardFormView extends AbstractSlackView
                                                 'text' => ':trophy: Employee of the Month',
                                                 'emoji' => true
                                             ],
-                                            'value' => '2'
+                                            'value' => Award::EMPLOYEE_OF_THE_MONTH
                                         ]
-                                    ]
+                                    ],
+                                    'action_id' => 'category'
                                 ],
                                 'label' => [
                                     'type' => 'plain_text',
@@ -88,6 +91,7 @@ class AwardFormView extends AbstractSlackView
                                 ]
                             ],
                             [
+                                'block_id' => 'user',
                                 'type' => 'input',
                                 'element' => [
                                     'type' => 'users_select',
@@ -95,7 +99,8 @@ class AwardFormView extends AbstractSlackView
                                         'type' => 'plain_text',
                                         'text' => 'Select a user',
                                         'emoji' => true
-                                    ]
+                                    ],
+                                    'action_id' => 'user'
                                 ],
                                 'label' => [
                                     'type' => 'plain_text',
@@ -104,6 +109,7 @@ class AwardFormView extends AbstractSlackView
                                 ]
                             ],
                             [
+                                'block_id' => 'quantity',
                                 'type' => 'input',
                                 'element' => [
                                     'type' => 'plain_text_input',
@@ -112,7 +118,8 @@ class AwardFormView extends AbstractSlackView
                                         'type' => 'plain_text',
                                         'text' => 'Quantity',
                                         'emoji' => true
-                                    ]
+                                    ],
+                                    'action_id' => 'quantity'
                                 ],
                                 'label' => [
                                     'type' => 'plain_text',
@@ -121,6 +128,7 @@ class AwardFormView extends AbstractSlackView
                                 ]
                             ],
                             [
+                                'block_id' => 'reason',
                                 'type' => 'input',
                                 'element' => [
                                     'type' => 'plain_text_input',
@@ -129,7 +137,8 @@ class AwardFormView extends AbstractSlackView
                                         'type' => 'plain_text',
                                         'text' => 'I am giving this person kudos because...',
                                         'emoji' => true
-                                    ]
+                                    ],
+                                    'action_id' => 'reason'
                                 ],
                                 'label' => [
                                     'type' => 'plain_text',
