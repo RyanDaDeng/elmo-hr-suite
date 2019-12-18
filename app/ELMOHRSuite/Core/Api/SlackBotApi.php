@@ -96,7 +96,7 @@ class SlackBotApi
             'json' => $message
         ]);
 //        Log::info($slackMessage->getBlocks()->getNumberOfBlocks());
-    //    Log::info(json_decode($res->getBody()->getContents(), 1));
+        Log::info(json_decode($res->getBody()->getContents(), 1));
         return json_decode($res->getBody()->getContents(), 1);
     }
 

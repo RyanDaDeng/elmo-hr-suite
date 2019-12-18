@@ -10,13 +10,34 @@ namespace App\ELMOHRSuite\Apps\LeaveApp\InteractiveActions\ViewActions;
 
 
 use App\ELMOHRSuite\Apps\LeaveApp\Views\LeaveFormView;
+use App\ELMOHRSuite\Core\Api\SlackBotApi;
 use App\ELMOHRSuite\Core\Api\SlackClientApi;
+use App\ELMOHRSuite\Core\Helpers\SlackMessageFormatter;
 use App\ELMOHRSuite\Core\InteractiveManager\AbstractInteractive;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 
 class LeaveFormSubmission extends AbstractInteractive
 {
+    protected $leaveMapping = [
+        'AL' => 'Annual Leave',
+        'SL' => 'Sick Leave',
+        'HL' => 'Work from home Leave',
+    ];
+
+    protected $teamMapping = [
+        'ER' => 'Hire',
+        'RTA' => 'RTA',
+        'CRT' => 'CRT',
+    ];
+
+    protected $channelMap = [
+        'ER' => 'CRWDDRK8W',
+        'RTA' => 'CRWDF0Z7G',
+        'CRT' => 'CRW36CCT1',
+    ];
+
+
 
     public function validate()
     {
@@ -40,10 +61,31 @@ class LeaveFormSubmission extends AbstractInteractive
         }
 
         Log::info($res->getData());
+        $data = $res->getData();
+        $slackBotApi = SlackBotApi::instance(config('slack.leave.bot_access_token'));
+        $this->sendPostMessage('CRU348L2Z', $slackBotApi, $data);
+        $this->sendPostMessage($this->channelMap[$data['team']] , $slackBotApi, $data);
 
         return JsonResponse::create(
             ["response_action" => "clear"],
             200);
+    }
+
+    /**
+     * @param SlackBotApi $slackBotApi
+     * @param array $data
+     */
+    public function sendPostMessage($channelId, SlackBotApi $slackBotApi, array $data): void
+    {
+        $slackBotApi->postMessage(
+            [
+                'channel' => $channelId,
+                'text' => '@here ' . SlackMessageFormatter::mentionUserId($this->payload['user']['id']) .
+                    ' from ' . $this->teamMapping[$data['team']] . ' team has requested a ' .
+                    $this->leaveMapping[$data['leave_type']] . ' on ' . $data['start_date'] .
+                    ' for ' . $data['days'] . ' days.'
+            ]
+        );
     }
 
 }
