@@ -83,9 +83,9 @@ class LeaveFormView extends AbstractSlackView
                                         [
                                             'text' => [
                                                 'type' => 'plain_text',
-                                                'text' => 'Work from home leave'
+                                                'text' => 'CRT'
                                             ],
-                                            'value' => 'HL'
+                                            'value' => 'CRT'
                                         ]
                                     ]
                                 ],
