@@ -10,7 +10,7 @@ networks:
        name: slack
 
 services:
-  salck-app:
+  slack-app:
     container_name: slack-app
     build:
       context: ./
