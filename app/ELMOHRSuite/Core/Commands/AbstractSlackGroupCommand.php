@@ -47,6 +47,7 @@ class AbstractSlackGroupCommand
         try {
             return $this->run();
         } catch (\Exception $exception) {
+            Log::info($exception);
             return $this->getListOfCommandsInfo();
         }
     }
