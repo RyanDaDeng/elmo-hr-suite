@@ -201,9 +201,7 @@ class SlackMessageFormatter
         $data = [];
 
         foreach ($view['view']['state'] as $blockId => $fields) {
-
             foreach ($fields as $fieldId => $field) {
-
                 $value = $field[$fieldId];
                 switch ($value['type']) {
                     case 'static_select':
