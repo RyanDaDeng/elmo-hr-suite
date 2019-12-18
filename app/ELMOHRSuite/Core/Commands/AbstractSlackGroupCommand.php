@@ -21,7 +21,7 @@ class AbstractSlackGroupCommand
     /**
      * @var array $payload
      */
-    private $payload = [];
+    protected $payload = [];
     /**
      * @var AbstractSlackCommand[] $commands
      */
@@ -114,7 +114,6 @@ class AbstractSlackGroupCommand
         $class = new $className($this->payload);
         return $class;
     }
-
 
     /**
      * @param $text
