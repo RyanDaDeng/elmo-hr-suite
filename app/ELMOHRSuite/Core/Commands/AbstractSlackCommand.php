@@ -103,6 +103,7 @@ abstract class AbstractSlackCommand
             }
             return $this->handle();
         } catch (\Exception $e) {
+            throw $e;
             return 'Server has some errors.';
         }
     }
