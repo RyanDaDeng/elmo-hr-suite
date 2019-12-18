@@ -52,7 +52,7 @@ php artisan migrate
 comment "Generate Application Key ..."
 php artisan key:generate
 
-comment "Dumping JS Routes file ..."
+comment "Clear Cache..."
 php artisan config:cache
 
 comment "Setup Complete."
