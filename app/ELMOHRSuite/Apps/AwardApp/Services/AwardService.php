@@ -7,6 +7,7 @@ use App\ELMOHRSuite\Apps\AwardApp\Models\Award;
 use App\ELMOHRSuite\Apps\AwardApp\Models\SlackUser;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AwardService
 {
@@ -32,6 +33,7 @@ class AwardService
                 }
             case Award::EMPLOYEE_OF_THE_MONTH:
                 {
+                    Log::info('------');
                     return $this->sendEmployeeOfMonth(
                         $sender,
                         $receiver,
@@ -88,6 +90,15 @@ class AwardService
         ]);
     }
 
+    /**
+     * @param $slackUserId
+     * @return SlackUser
+     */
+    public function getSlackUser($slackUserId)
+    {
+        return SlackUser::query()->where('slack_user_id', $slackUserId)->first();
+    }
+
     public function sendHighPerformance(
         $sender,
         $receiver,
@@ -96,13 +107,15 @@ class AwardService
         $reason
     ) {
 
+        $slackSender = $this->getSlackUser($sender);
+
         // check enough balance
-        if ($sender->hasHighPerformanceBalance($quantity)) {
+        if (!$slackSender->hasHighPerformanceBalance($quantity)) {
             return false;
         }
-        // decrement balance
-        $sender->newQuery()->decrement('high_performance_balance');
 
+        $slackSender->high_performance_balance--;
+        $slackSender->save();
         // send award
         return $this->sendAward([
             'quantity' => $quantity,
@@ -121,13 +134,14 @@ class AwardService
         $quantity,
         $reason
     ) {
-
+        $slackSender = $this->getSlackUser($sender);
         // check enough balance
-        if ($sender->hasEnoughEmployeeOfTheMonthBalance($quantity)) {
+        if (!$slackSender->hasEnoughEmployeeOfTheMonthBalance($quantity)) {
             return false;
         }
         // decrement balance
-        $sender->newQuery()->decrement('employee_of_the_month_balance');
+        $slackSender->employee_of_the_month_balance--;
+        $slackSender->save();
 
         // send award
         return $this->sendAward([
