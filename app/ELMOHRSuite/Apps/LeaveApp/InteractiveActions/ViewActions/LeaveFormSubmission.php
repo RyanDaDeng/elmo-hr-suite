@@ -9,6 +9,7 @@
 namespace App\ELMOHRSuite\Apps\LeaveApp\InteractiveActions\ViewActions;
 
 
+use App\ELMOHRSuite\Apps\LeaveApp\InteractiveActions\Store;
 use App\ELMOHRSuite\Apps\LeaveApp\Views\LeaveFormView;
 use App\ELMOHRSuite\Core\Api\SlackBotApi;
 use App\ELMOHRSuite\Core\Api\SlackClientApi;
@@ -26,19 +27,18 @@ class LeaveFormSubmission extends AbstractInteractive
     ];
 
     protected $teamMapping = [
-        'ER' => 'Hire',
+        'ER'  => 'Hire',
         'RTA' => 'RTA',
         'CRT' => 'CRT',
     ];
 
     protected $channelMap = [
-        'ER' => 'CRWDDRK8W',
+        'ER'  => 'CRWDDRK8W',
         'RTA' => 'CRWDF0Z7G',
         'CRT' => 'CRW36CCT1',
     ];
 
     //URRTWAZQX
-
 
 
     public function validate()
@@ -54,11 +54,11 @@ class LeaveFormSubmission extends AbstractInteractive
         );
 
         $dialog = new LeaveFormView();
-        $res = $dialog->validate($this->payload);
+        $res    = $dialog->validate($this->payload);
         if ($res->isFailed()) {
             return JsonResponse::create([
                 'response_action' => 'errors',
-                'errors' => $res->getErrors()
+                'errors'          => $res->getErrors()
             ], 200);
         }
 
@@ -67,8 +67,8 @@ class LeaveFormSubmission extends AbstractInteractive
 
         $slackBotApi = SlackBotApi::instance(config('slack.leave.bot_access_token'));
         $this->sendPostMessage('CRU348L2Z', $slackBotApi, $data);
-        $this->sendPostMessage($this->channelMap[$data['team']] , $slackBotApi, $data);
-        $this->sendPostBlockMessage($data['manager'] , $slackBotApi, $data);
+        $this->sendPostMessage($this->channelMap[$data['team']], $slackBotApi, $data);
+        $this->sendPostBlockMessage($data['manager'], $slackBotApi, $data);
 
         return JsonResponse::create(
             ["response_action" => "clear"],
@@ -85,14 +85,13 @@ class LeaveFormSubmission extends AbstractInteractive
             [
                 'as_user' => true,
                 'channel' => $channelId,
-                'text' => '@here ' . SlackMessageFormatter::mentionUserId($this->payload['user']['id']) .
+                'text'    => '@here ' . SlackMessageFormatter::mentionUserId($this->payload['user']['id']) .
                     ' from ' . $this->teamMapping[$data['team']] . ' team has requested a ' .
                     $this->leaveMapping[$data['leave_type']] . ' on ' . $data['start_date'] .
                     ' for ' . $data['days'] . ' days.'
             ]
         );
     }
-
 
 
     /**
@@ -102,7 +101,7 @@ class LeaveFormSubmission extends AbstractInteractive
     public function sendPostBlockMessage($channelId, SlackBotApi $slackBotApi, array $data): void
     {
         $manager = SlackMessageFormatter::mentionUserId($data['manager']);
-        $user = SlackMessageFormatter::mentionUserId($this->payload['user']['id']);
+        $user    = SlackMessageFormatter::mentionUserId($this->payload['user']['id']);
 
         $endDate = date('d/m/Y', strtotime("+ {$data['days']} day", strtotime($data['start_date'])));
 
@@ -110,29 +109,29 @@ class LeaveFormSubmission extends AbstractInteractive
             [
                 'as_user' => true,
                 'channel' => $channelId,
-                'text' => '@here ' . $user .
+                'text'    => '@here ' . $user .
                     ' from ' . $this->teamMapping[$data['team']] . ' team has requested a ' .
                     $this->leaveMapping[$data['leave_type']] . ' on ' . $data['start_date'] .
                     ' for ' . $data['days'] . ' days.',
-                'blocks' => array (
+                'blocks'  => array(
                     0 =>
-                        array (
+                        array(
                             'type' => 'section',
                             'text' =>
-                                array (
+                                array(
                                     'type' => 'mrkdwn',
-                                    'text' => 'New leave request for '. $user,
+                                    'text' => 'New leave request for ' . $user,
                                 ),
                         ),
                     1 =>
-                        array (
+                        array(
                             'type' => 'divider',
                         ),
                     2 =>
-                        array (
+                        array(
                             'type' => 'section',
                             'text' =>
-                                array (
+                                array(
                                     'type' => 'mrkdwn',
                                     'text' => "Dear {$manager},
 
@@ -149,33 +148,35 @@ Kind Regards, ELMO HR Team",
                                 ),
                         ),
                     3 =>
-                        array (
-                            'type' => 'actions',
+                        array(
+                            'type'     => 'actions',
                             'elements' =>
-                                array (
+                                array(
                                     0 =>
-                                        array (
-                                            'type' => 'button',
-                                            'text' =>
-                                                array (
-                                                    'type' => 'plain_text',
-                                                    'text' => 'Approve',
+                                        array(
+                                            'type'      => 'button',
+                                            'text'      =>
+                                                array(
+                                                    'type'  => 'plain_text',
+                                                    'text'  => 'Approve',
                                                     'emoji' => true,
                                                 ),
-                                            'style' => 'primary',
-                                            'value' => 'click_me_123',
+                                            'style'     => 'primary',
+                                            'value'     => 'click_me_123', //todo,
+                                            'action_id' => Store::LEAVE_APPROVED_ACTION
                                         ),
                                     1 =>
-                                        array (
-                                            'type' => 'button',
-                                            'text' =>
-                                                array (
-                                                    'type' => 'plain_text',
-                                                    'text' => 'Reject',
+                                        array(
+                                            'type'      => 'button',
+                                            'text'      =>
+                                                array(
+                                                    'type'  => 'plain_text',
+                                                    'text'  => 'Reject',
                                                     'emoji' => true,
                                                 ),
-                                            'style' => 'danger',
-                                            'value' => 'click_me_123',
+                                            'style'     => 'danger',
+                                            'value'     => 'click_me_123',
+                                            'action_id' => Store::LEAVE_DECLINED_ACTION
                                         ),
                                 ),
                         ),
