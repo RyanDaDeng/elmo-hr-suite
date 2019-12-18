@@ -13,15 +13,15 @@ use App\ELMOHRSuite\Core\Commands\AbstractSlackGroupCommand;
 class AwardsGroupCommand extends AbstractSlackGroupCommand
 {
 
-    // protected $groupCommandName = 'awards';
+     protected $groupCommandName = 'kudos';
     /**
      * @var array $commands
      */
     protected $commands = [
-//        CookiesYouReceivedCommand::class,
-//        CookiesYouSentCommand::class,
-//        LeaderBoardCommand::class,
-//        CookiesBalanceCommand::class,
+        CookiesYouReceivedCommand::class,
+        CookiesYouSentCommand::class,
+        LeaderBoardCommand::class,
+        CookiesBalanceCommand::class,
         OpenAwardCommand::class
     ];
 

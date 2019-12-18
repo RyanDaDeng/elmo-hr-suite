@@ -35,7 +35,7 @@ class SlackController extends Controller
      */
     public function command(Request $request)
     {
-        // return (new AwardsGroupCommand($request->all()))->execute();
+        return (new AwardsGroupCommand($request->all()))->execute();
         return (new OpenAwardCommand($request->all()))->execute();
     }
 

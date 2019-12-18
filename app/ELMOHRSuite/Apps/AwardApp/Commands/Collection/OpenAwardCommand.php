@@ -14,7 +14,7 @@ class OpenAwardCommand extends AbstractAwardsCommandBase
     /**
      * @var string $name
      */
-    protected $commandName = 'kudos';
+    protected $commandName = 'send';
 
     /**
      * @return bool
