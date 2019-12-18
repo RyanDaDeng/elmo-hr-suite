@@ -12,6 +12,7 @@ use App\ELMOHRSuite\Apps\AwardApp\Commands\AbstractAwardsCommandBase;
 use App\ELMOHRSuite\Apps\AwardApp\Services\AwardService;
 use App\ELMOHRSuite\Core\Helpers\SlackMessageFormatter;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class LeaderBoardCommand extends AbstractAwardsCommandBase
 {
@@ -39,8 +40,13 @@ class LeaderBoardCommand extends AbstractAwardsCommandBase
      */
     public function process()
     {
-
+        return '22';
+        Log::info('ss');
+        return '22';
         $service        = new AwardService();
+
+        Log::info('ss');
+        return $service->getTopFiveCookies();
         $receivedAwards = $service->showMyReceives($this->slackUser->slack_user_id);
 
         if (!$receivedAwards) {
