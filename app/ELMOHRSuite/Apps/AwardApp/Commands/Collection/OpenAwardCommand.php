@@ -3,11 +3,11 @@
 namespace App\ELMOHRSuite\Apps\AwardApp\Commands\Collection;
 
 
+use App\ELMOHRSuite\Apps\AwardApp\Commands\AbstractAwardsCommandBase;
 use App\ELMOHRSuite\Apps\AwardApp\Views\AwardFormView;
 use App\ELMOHRSuite\Core\Api\SlackClientApi;
-use App\ELMOHRSuite\Core\Commands\AbstractSlackCommand;
 
-class OpenAwardCommand extends AbstractSlackCommand
+class OpenAwardCommand extends AbstractAwardsCommandBase
 {
 
     protected $description = 'create award';
@@ -29,7 +29,6 @@ class OpenAwardCommand extends AbstractSlackCommand
      */
     public function process()
     {
-
         $awardFormView = new AwardFormView();
 
         SlackClientApi::instance(

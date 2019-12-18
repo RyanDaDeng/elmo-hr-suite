@@ -82,6 +82,7 @@ class SlackClientApi
             'chat.postMessage', [
             'json' => $messages
         ]);
+        Log::info(json_decode($res->getBody()->getContents(), 1));
         return json_decode($res->getBody()->getContents(), 1);
     }
 
