@@ -15,6 +15,7 @@ use App\ELMOHRSuite\Core\Api\SlackBotApi;
 use App\ELMOHRSuite\Core\Api\SlackClientApi;
 use App\ELMOHRSuite\Core\Helpers\SlackMessageFormatter;
 use App\ELMOHRSuite\Core\InteractiveManager\AbstractInteractive;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 
@@ -108,6 +109,157 @@ class LeaveFormSubmission extends AbstractInteractive
         $payloadData = [
             'data' => $data
         ];
+
+
+        $blocks =
+            array(
+                0 =>
+                    array(
+                        'type' => 'section',
+                        'text' =>
+                            array(
+                                'type' => 'mrkdwn',
+                                'text' => '*You have a new request*',
+                            ),
+                    ),
+                1 =>
+                    array(
+                        'type'   => 'section',
+                        'fields' =>
+                            array(
+                                0 =>
+                                    array(
+                                        'type' => 'mrkdwn',
+                                        'text' => '*:runner: *Applicant*',
+                                    ),
+                                1 =>
+                                    array(
+                                        'type' => 'mrkdwn',
+                                        'text' => ':bell: *Type*',
+                                    ),
+                                2 =>
+                                    array(
+                                        'type' => 'mrkdwn',
+                                        'text' => $user,
+                                    ),
+                                3 =>
+                                    array(
+                                        'type' => 'mrkdwn',
+                                        'text' => $this->leaveMapping[$data['leave_type']],
+                                    ),
+                            ),
+                    ),
+                2 =>
+                    array(
+                        'type' => 'divider',
+                    ),
+                3 =>
+                    array(
+                        'type'   => 'section',
+                        'fields' =>
+                            array(
+                                0 =>
+                                    array(
+                                        'type' => 'mrkdwn',
+                                        'text' => ':clock10: *Start Date*',
+                                    ),
+                                1 =>
+                                    array(
+                                        'type' => 'mrkdwn',
+                                        'text' => ':clock1030: *End Date*',
+                                    ),
+                                2 =>
+                                    array(
+                                        'type' => 'mrkdwn',
+                                        'text' => Carbon::parse($data['start_date'])->format('Y-m-d'),
+                                    ),
+                                3 =>
+                                    array(
+                                        'type' => 'mrkdwn',
+                                        'text' => Carbon::parse($data['start_date'])->addDays($data['days'])->format('Y-m-d'),
+                                    ),
+                            ),
+                    ),
+                4 =>
+                    array(
+                        'type'   => 'section',
+                        'fields' =>
+                            array(
+                                0 =>
+                                    array(
+                                        'type' => 'mrkdwn',
+                                        'text' => ':calendar: *Submitted at*',
+                                    ),
+                                1 =>
+                                    array(
+                                        'type' => 'mrkdwn',
+                                        'text' => ':mag: *Approver*',
+                                    ),
+                                2 =>
+                                    array(
+                                        'type' => 'mrkdwn',
+                                        'text' => Carbon::now()->format('Y-m-d'),
+                                    ),
+                                3 =>
+                                    array(
+                                        'type' => 'mrkdwn',
+                                        'text' => $user,
+                                    ),
+                            ),
+                    ),
+                5 =>
+                    array(
+                        'type' => 'section',
+                        'text' =>
+                            array(
+                                'type' => 'mrkdwn',
+                                'text' => SlackMessageFormatter::withParagraphs(
+                                    ':speech_balloon: *Reason* ',
+                                    $data['reason']
+                                ),
+                            ),
+                    ),
+                6 =>
+                    array(
+                        'type'     => 'actions',
+                        'elements' =>
+                            array(
+                                0 =>
+                                    array(
+                                        'type'      => 'button',
+                                        'text'      =>
+                                            array(
+                                                'type'  => 'plain_text',
+                                                'text'  => 'Approve',
+                                                'emoji' => true,
+                                            ),
+                                        'style'     => 'primary',
+                                        'value'     => json_encode($data), //todo,
+                                        'action_id' => Store::LEAVE_APPROVED_ACTION
+                                    ),
+                                1 =>
+                                    array(
+                                        'type'      => 'button',
+                                        'text'      =>
+                                            array(
+                                                'type'  => 'plain_text',
+                                                'text'  => 'Reject',
+                                                'emoji' => true,
+                                            ),
+                                        'style'     => 'danger',
+                                        'value'     => json_encode($data),
+                                        'action_id' => Store::LEAVE_DECLINED_ACTION
+                                    ),
+                            ),
+                    ),
+                7 =>
+                    array(
+                        'type' => 'divider',
+                    )
+            );
+
+
+
         $slackBotApi->postMessage(
             [
                 'as_user' => true,
@@ -116,74 +268,7 @@ class LeaveFormSubmission extends AbstractInteractive
                     ' from ' . $this->teamMapping[$data['team']] . ' team has requested a ' .
                     $this->leaveMapping[$data['leave_type']] . ' on ' . $data['start_date'] .
                     ' for ' . $data['days'] . ' days.',
-                'blocks'  => array(
-                    0 =>
-                        array(
-                            'type' => 'section',
-                            'text' =>
-                                array(
-                                    'type' => 'mrkdwn',
-                                    'text' => 'New leave request for ' . $user,
-                                ),
-                        ),
-                    1 =>
-                        array(
-                            'type' => 'divider',
-                        ),
-                    2 =>
-                        array(
-                            'type' => 'section',
-                            'text' =>
-                                array(
-                                    'type' => 'mrkdwn',
-                                    'text' => "Dear {$manager},
-
-A new leave request for {$user} requires your approval.
-
-Details:
-Leave Type: {$this->leaveMapping[$data['leave_type']]}
-Duration: {$data['days']} days from {$data['start_date']}
-
-Comments: {$data['reason']}.
-
-
-Kind Regards, ELMO HR Team",
-                                ),
-                        ),
-                    3 =>
-                        array(
-                            'type'     => 'actions',
-                            'elements' =>
-                                array(
-                                    0 =>
-                                        array(
-                                            'type'      => 'button',
-                                            'text'      =>
-                                                array(
-                                                    'type'  => 'plain_text',
-                                                    'text'  => 'Approve',
-                                                    'emoji' => true,
-                                                ),
-                                            'style'     => 'primary',
-                                            'value'     => json_encode($data), //todo,
-                                            'action_id' => Store::LEAVE_APPROVED_ACTION
-                                        ),
-                                    1 =>
-                                        array(
-                                            'type'      => 'button',
-                                            'text'      =>
-                                                array(
-                                                    'type'  => 'plain_text',
-                                                    'text'  => 'Reject',
-                                                    'emoji' => true,
-                                                ),
-                                            'style'     => 'danger',
-                                            'value'     => json_encode($data)  ,
-                                            'action_id' => Store::LEAVE_DECLINED_ACTION
-                                        ),
-                                ),
-                        ),
-                )
+                'blocks'  => $blocks
             ]
         );
     }
