@@ -88,7 +88,6 @@ class SlackClientApi
 
     public function openViews($data)
     {
-
         try {
             $res = $this->http->request(
                 'post',
@@ -96,12 +95,11 @@ class SlackClientApi
                 [
                     'json' => $data
                 ]);
+            $body = $res->getBody()->getContents();
+            Log::error($res->getBody()->getContents());
         } catch (Exception $e) {
             Log::error($e);
         }
-
-
-//        Log::error($res->getBody()->getContents());
     }
 
     public function openDialog($dialogData)

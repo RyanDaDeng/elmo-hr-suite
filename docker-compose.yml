@@ -1,0 +1,46 @@
+version: '3.5'
+
+x-logging: &x-logging
+    driver: json-file
+    options:
+        max-size: '10m'
+
+networks:
+    slack:
+       name: slack
+
+services:
+  salck-app:
+    container_name: slack-app
+    build:
+      context: ./
+      args:
+        SSH_PRIVATE_KEY : ${SSH_PRIVATE_KEY}
+    tty: true
+    user: root
+    env_file:
+      - ./app.env
+    ports:
+      - 8093:80
+    logging: *x-logging
+    networks:
+      - slack
+  slack-mysql:
+    container_name: slack-mysql
+    image: mysql:5.7
+    environment:
+      - MYSQL_DATABASE=laravel
+      - DB_USERNAME=root
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - 3307:3306
+    networks:
+      - slack
+  # Service: Redis
+  slack-redis:
+    container_name: slack-redis
+    image: redis
+    ports:
+      - 6377:6379
+    networks:
+      - slack

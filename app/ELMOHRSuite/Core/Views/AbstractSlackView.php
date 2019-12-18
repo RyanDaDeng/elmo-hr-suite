@@ -51,7 +51,6 @@ abstract class AbstractSlackView
     public function collectData($view)
     {
         $data = [];
-
         foreach ($view['view']['state'] as $blockId => $fields) {
 
             foreach ($fields as $fieldId => $field) {
@@ -64,7 +63,9 @@ abstract class AbstractSlackView
                     case 'plain_text_input':
                         $data[$fieldId] = $value['value'];
                         break;
-
+                    case 'users_select':
+                        $data[$fieldId] = $value['selected_user'];
+                        break;
                 }
             }
         }
