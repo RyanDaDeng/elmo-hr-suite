@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\LeaveApp;
 
-use App\ELMOHRSuite\LeaveApp\GroupCommands\LeaveGroupCommand;
-use App\ELMOHRSuite\LeaveApp\InteractiveActions\LeaveInteractiveManager;
+use App\ELMOHRSuite\Apps\LeaveApp\Commands\LeaveGroupCommand;
+use App\ELMOHRSuite\Apps\LeaveApp\InteractiveActions\LeaveInteractiveManager;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

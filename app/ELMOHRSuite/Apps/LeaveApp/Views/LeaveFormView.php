@@ -19,8 +19,8 @@ class LeaveFormView extends AbstractSlackView
     protected function rules()
     {
         return [
-            'start_date' => ['required', 'date_format:Y-m-d H:i', 'max:150', 'min:0'],
-            'end_date' => ['required', 'date_format:Y-m-d H:i', 'after:start_date', 'max:150', 'min:0'],
+            'start_date' => ['required', 'max:150', 'min:0'],
+          //  'end_date' => ['required', 'date_format:Y-m-d H:i', 'after:start_date', 'max:150', 'min:0'],
             'reason' => ['required', 'max:500', 'min:0']
         ];
     }
@@ -56,6 +56,60 @@ class LeaveFormView extends AbstractSlackView
                     //https://api.slack.com/reference/block-kit/blocks#input
                         [
                             [
+                                'block_id' => 'team',
+                                'type' => 'input',
+                                'label' => [
+                                    'type' => 'plain_text',
+                                    'text' => 'Team'
+                                ],
+                                'element' => [
+                                    'action_id' => 'team',
+                                    'type' => 'static_select',
+                                    'options' => [
+                                        [
+                                            'text' => [
+                                                'type' => 'plain_text',
+                                                'text' => 'Hire'
+                                            ],
+                                            'value' => 'ER'
+                                        ],
+                                        [
+                                            'text' => [
+                                                'type' => 'plain_text',
+                                                'text' => 'RTA'
+                                            ],
+                                            'value' => 'RTA'
+                                        ],
+                                        [
+                                            'text' => [
+                                                'type' => 'plain_text',
+                                                'text' => 'Work from home leave'
+                                            ],
+                                            'value' => 'HL'
+                                        ]
+                                    ]
+                                ],
+
+                            ],
+                            [
+                                'block_id' => 'manager',
+                                'type' => 'input',
+                                'element' => [
+                                    'action_id' => 'manager',
+                                    'type' => 'users_select',
+                                    'placeholder' => [
+                                        'type' => 'plain_text',
+                                        'text' => 'Select a user',
+                                        'emoji' => true
+                                    ]
+                                ],
+                                'label' => [
+                                    'type' => 'plain_text',
+                                    'text' => 'Manager',
+                                    'emoji' => true
+                                ]
+                            ],
+                            [
                                 'block_id' => 'leave_type',
                                 'type' => 'input',
                                 'label' => [
@@ -69,9 +123,23 @@ class LeaveFormView extends AbstractSlackView
                                         [
                                             'text' => [
                                                 'type' => 'plain_text',
-                                                'text' => 'normal form'
+                                                'text' => 'Annual leave'
                                             ],
-                                            'value' => 'normal'
+                                            'value' => 'AL'
+                                        ],
+                                        [
+                                            'text' => [
+                                                'type' => 'plain_text',
+                                                'text' => 'Sick leave'
+                                            ],
+                                            'value' => 'SL'
+                                        ],
+                                        [
+                                            'text' => [
+                                                'type' => 'plain_text',
+                                                'text' => 'Work from home leave'
+                                            ],
+                                            'value' => 'HL'
                                         ]
                                     ]
                                 ],
@@ -82,24 +150,31 @@ class LeaveFormView extends AbstractSlackView
                                 'type' => 'input',
                                 'label' => [
                                     'type' => 'plain_text',
-                                    'text' => 'start_date'
+                                    'text' => 'Start From'
                                 ],
                                 'element' => [
                                     'action_id' => 'start_date',
-                                    'type' => 'plain_text_input'
-                                ],
+                                    'type' => 'plain_text_input',
+                                    'initial_value' => date('d/m/Y'),
+                                    "placeholder" => [
+                                        "type" => "plain_text",
+                                        "text" => "e.g. ". date('d/m/Y')
+                                      ],
+                                ]
 
                             ],
                             [
-                                'block_id' => 'end_date',
+                                'block_id' => 'days',
                                 'type' => 'input',
                                 'label' => [
                                     'type' => 'plain_text',
-                                    'text' => 'end_date'
+                                    'text' => 'Days'
                                 ],
                                 'element' => [
-                                    'action_id' => 'end_date',
-                                    'type' => 'plain_text_input'
+                                    'action_id' => 'days',
+                                    'type' => 'plain_text_input',
+                                    'initial_value' => '1',
+
                                 ]
 
                             ],
@@ -108,12 +183,17 @@ class LeaveFormView extends AbstractSlackView
                                 'type' => 'input',
                                 'label' => [
                                     'type' => 'plain_text',
-                                    'text' => 'reason'
+                                    'text' => 'Reason'
                                 ],
                                 'element' => [
                                     'action_id' => 'reason',
                                     'type' => 'plain_text_input',
-                                    "multiline" => true
+                                    "multiline" => true,
+                                    "placeholder" => [
+                                        "type" => "plain_text",
+                                        "text" => "Please provide your reason"
+                                    ]
+
                                 ]
 
                             ]
