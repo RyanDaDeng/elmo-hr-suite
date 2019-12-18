@@ -21,7 +21,7 @@ services:
     env_file:
       - ./app.env
     ports:
-      - 8093:80
+      - 8099:80
     logging: *x-logging
     networks:
       - slack
