@@ -41,7 +41,7 @@ fi
 
 
 comment "Installing PHP Dependencies ..."
-    composer install -v --no-dev --prefer-dist --optimize-autoloader --no-ansi --no-interaction
+composer install
 
 #Permissions for www-data user
 chown -R www-data:www-data storage/logs 
