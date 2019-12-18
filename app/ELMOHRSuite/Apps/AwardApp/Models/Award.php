@@ -46,19 +46,24 @@ class Award extends Model
 
     public function getEmojiAttribute()
     {
-        $type = $this->attributes['category'];
-        switch ($type) {
+        return $this->getEmojiByCategory($this->attributes['category']);
+
+    }
+
+
+    public static function getEmojiByCategory($category)
+    {
+        switch ($category) {
             case 'High Performance':
-                return ':first_place_medal: medal';
+                return ':first_place_medal:';
                 break;
             case 'Employee of The Month':
-                return ':trophy: (trophy)';
+                return ':trophy:';
                 break;
             case "Team Recognition":
-                return ':cookie: (cookie)';
+                return ':cookie:';
                 break;
         }
         return ':cookie:';
-
     }
 }

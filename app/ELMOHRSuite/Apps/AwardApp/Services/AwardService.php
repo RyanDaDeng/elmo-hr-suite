@@ -160,7 +160,7 @@ class AwardService
      */
     public function showMySent($slackUserId)
     {
-        return Award::query()->where('sender', $slackUserId)->get();
+        return Award::query()->where('sender', $slackUserId)->limit(10)->get()->sortByDesc('id');
     }
 
     /**
@@ -169,7 +169,7 @@ class AwardService
      */
     public function showMyReceives($slackUserId)
     {
-        return Award::query()->where('receiver', $slackUserId)->get();
+        return Award::query()->where('receiver', $slackUserId)->limit(10)->get()->sortByDesc('id');
 
     }
 
@@ -208,6 +208,7 @@ class AwardService
             )
             ->where('category', Award::TEAM_RECOGNITION)
             ->groupBy('receiver')
+            ->limit(5)
             ->get()
             ->toArray();
     }

@@ -32,7 +32,11 @@ class QuantityValidationRule implements Rule
     public function passes($attribute, $value)
     {
         //
-        return $value <= $this->limit;
+
+        if($this->limit !==null){
+            return $value <= $this->limit;
+        }
+        return true;
     }
 
     /**

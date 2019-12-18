@@ -50,7 +50,7 @@ class AwardFormSubmission extends AbstractInteractive
                 $limit = $slackUser->high_performance_balance;
                 break;
             default:
-                $limit = 0;
+                $limit = null;
         }
 
         $view = new AwardFormView();
@@ -82,11 +82,18 @@ class AwardFormSubmission extends AbstractInteractive
         );
 
         $slackBotApi      = SlackBotApi::instance(config('slack.awards.bot_access_token'));
-        $notificationText = SlackMessageFormatter::mentionUserId($formData['user']) . ' got ' . $formData['quantity'] . ' cookies from ' . $payload['user']['username'];
+        $notificationText =
+            SlackMessageFormatter::withParagraphs(
+
+                SlackMessageFormatter::mentionUserId($formData['user']) . ' got ' . SlackMessageFormatter::inlineBoldText($formData['quantity']) .
+                Award::getEmojiByCategory($formData['category']) . ' from ' .
+                SlackMessageFormatter::mentionUserId($payload['user']['username']),
+                SlackMessageFormatter::quote(SlackMessageFormatter::italic($formData['reason']))
+            );
         $res              = $slackBotApi->postMessage(
             [
                 'channel' => $notificationChannel,
-                'text'    => $notificationText
+                'text'    => $notificationText,
             ]
         );
 
