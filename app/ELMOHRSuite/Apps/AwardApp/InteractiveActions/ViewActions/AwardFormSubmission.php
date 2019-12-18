@@ -8,6 +8,7 @@
 
 namespace App\ELMOHRSuite\Apps\AwardApp\InteractiveActions\ViewActions;
 
+use App\ELMOHRSuite\Apps\AwardApp\Services\AwardService;
 use App\ELMOHRSuite\Core\Api\SlackBotApi;
 use App\ELMOHRSuite\Core\Helpers\SlackMessageFormatter;
 use App\ELMOHRSuite\Core\InteractiveManager\AbstractInteractive;
@@ -27,6 +28,15 @@ class AwardFormSubmission extends AbstractInteractive
         $payload = $this->payload;
 
         $formData = SlackMessageFormatter::collectData($payload);
+
+        $awardService = new AwardService();
+        $awardService->send(
+            $formData['category'],
+            $payload['user']['id'],
+            $formData['user'],
+            $formData['quantity'],
+            $formData['reason']
+        );
 
         $slackBotApi = SlackBotApi::instance(config('slack.awards.bot_access_token'));
         $notificationText = SlackMessageFormatter::mentionUserId($formData['user'] ). ' got ' . $formData['quantity'] . ' cookies from ' . $payload['user']['username'];
