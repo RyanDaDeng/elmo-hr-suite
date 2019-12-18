@@ -5,9 +5,50 @@ namespace App\ELMOHRSuite\Apps\AwardApp\Services;
 
 use App\ELMOHRSuite\Apps\AwardApp\Models\Award;
 use App\ELMOHRSuite\Apps\AwardApp\Models\SlackUser;
+use Carbon\Carbon;
 
 class AwardService
 {
+    public function send(
+        $category,
+        $sender,
+        $receiver,
+        $quantity,
+        $reason
+    ) {
+        $sendAt = Carbon::now()->format('Y-m-d H:i:s');
+
+        switch ($category) {
+            case Award::TEAM_RECOGNITION: {
+                return $this->sendTeamRecognition(
+                    $sender,
+                    $receiver,
+                    $sendAt,
+                    $quantity,
+                    $reason
+                );
+            }
+            case Award::EMPLOYEE_OF_THE_MONTH: {
+                return $this->sendEmployeeOfMonth(
+                    $sender,
+                    $receiver,
+                    $sendAt,
+                    $quantity,
+                    $reason
+                );
+            }
+            case Award::HIGH_PERFORMANCE: {
+                return $this->sendHighPerformance(
+                    $sender,
+                    $receiver,
+                    $sendAt,
+                    $quantity,
+                    $reason
+                );
+            }
+        }
+    }
+
     private function sendAward(
         $data
     ) {
@@ -26,7 +67,7 @@ class AwardService
     }
 
     public function sendTeamRecognition(
-        SlackUser $sender,
+        $sender,
         $receiver,
         $sentAt,
         $quantity,
@@ -44,7 +85,7 @@ class AwardService
     }
 
     public function sendHighPerformance(
-        SlackUser $sender,
+        $sender,
         $receiver,
         $sentAt,
         $quantity,
@@ -70,7 +111,7 @@ class AwardService
     }
 
     public function sendEmployeeOfMonth(
-        SlackUser $sender,
+        $sender,
         $receiver,
         $sentAt,
         $quantity,

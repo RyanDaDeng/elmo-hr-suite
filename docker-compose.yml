@@ -10,7 +10,7 @@ networks:
        name: slack
 
 services:
-  salck-app:
+  slack-app:
     container_name: slack-app
     build:
       context: ./
@@ -21,7 +21,7 @@ services:
     env_file:
       - ./app.env
     ports:
-      - 8093:80
+      - 8099:80
     logging: *x-logging
     networks:
       - slack

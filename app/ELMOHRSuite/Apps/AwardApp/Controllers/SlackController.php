@@ -40,6 +40,6 @@ class SlackController extends Controller
 
     public function interactive(Request $request)
     {
-        return (new AwardInteractiveManager(json_decode($request->all()['payload'], 1)))->process();
+        return (new AwardInteractiveManager(json_decode($request->all()['payload'], true)))->process();
     }
 }
