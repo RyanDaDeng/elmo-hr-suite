@@ -47,7 +47,7 @@ class CookiesBalanceCommand extends AbstractAwardsCommandBase
                     'text' =>
                         [
                             'type' => 'mrkdwn',
-                            'text' =>'*Your remaining balance: *'
+                            'text' => '*Your remaining balance: *'
 
                         ]
                 ],
@@ -61,7 +61,7 @@ class CookiesBalanceCommand extends AbstractAwardsCommandBase
                         [
                             'type' => 'mrkdwn',
                             'text' =>
-                                ':first_place_medal: *High Performance Balance* :' . $this->slackUser->high_performance_balance . ' vote(s)'
+                                ':first_place_medal: *High Performance Balance* : ' . SlackMessageFormatter::inlineBoldText($this->slackUser->high_performance_balance) . ' vote(s)'
 
                         ]
                 ],
@@ -74,7 +74,7 @@ class CookiesBalanceCommand extends AbstractAwardsCommandBase
                         [
                             'type' => 'mrkdwn',
                             'text' =>
-                                ':trophy: *Employee of The Month Balance* :' . $this->slackUser->employee_of_the_month_balance . ' vote(s)'
+                                ':trophy: *Employee of The Month Balance* : ' . SlackMessageFormatter::inlineBoldText($this->slackUser->employee_of_the_month_balance) . ' vote(s)'
 
                         ]
                 ],

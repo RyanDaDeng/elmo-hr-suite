@@ -6,6 +6,7 @@ namespace App\ELMOHRSuite\Apps\AwardApp\Services;
 use App\ELMOHRSuite\Apps\AwardApp\Models\Award;
 use App\ELMOHRSuite\Apps\AwardApp\Models\SlackUser;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class AwardService
 {
@@ -19,33 +20,36 @@ class AwardService
         $sendAt = Carbon::now()->format('Y-m-d H:i:s');
 
         switch ($category) {
-            case Award::TEAM_RECOGNITION: {
-                return $this->sendTeamRecognition(
-                    $sender,
-                    $receiver,
-                    $sendAt,
-                    $quantity,
-                    $reason
-                );
-            }
-            case Award::EMPLOYEE_OF_THE_MONTH: {
-                return $this->sendEmployeeOfMonth(
-                    $sender,
-                    $receiver,
-                    $sendAt,
-                    $quantity,
-                    $reason
-                );
-            }
-            case Award::HIGH_PERFORMANCE: {
-                return $this->sendHighPerformance(
-                    $sender,
-                    $receiver,
-                    $sendAt,
-                    $quantity,
-                    $reason
-                );
-            }
+            case Award::TEAM_RECOGNITION:
+                {
+                    return $this->sendTeamRecognition(
+                        $sender,
+                        $receiver,
+                        $sendAt,
+                        $quantity,
+                        $reason
+                    );
+                }
+            case Award::EMPLOYEE_OF_THE_MONTH:
+                {
+                    return $this->sendEmployeeOfMonth(
+                        $sender,
+                        $receiver,
+                        $sendAt,
+                        $quantity,
+                        $reason
+                    );
+                }
+            case Award::HIGH_PERFORMANCE:
+                {
+                    return $this->sendHighPerformance(
+                        $sender,
+                        $receiver,
+                        $sendAt,
+                        $quantity,
+                        $reason
+                    );
+                }
         }
     }
 
@@ -183,7 +187,14 @@ class AwardService
 
     public function getTopFiveCookies()
     {
-
-
+        return DB::table('awards')
+            ->select(
+                DB::raw('sum(quantity) as total'),
+                'receiver'
+            )
+            ->where('category', Award::TEAM_RECOGNITION)
+            ->groupBy('receiver')
+            ->get()
+            ->toArray();
     }
 }

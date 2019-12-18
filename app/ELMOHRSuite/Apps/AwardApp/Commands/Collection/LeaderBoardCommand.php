@@ -10,6 +10,7 @@ namespace App\ELMOHRSuite\Apps\AwardApp\Commands\Collection;
 
 use App\ELMOHRSuite\Apps\AwardApp\Commands\AbstractAwardsCommandBase;
 use App\ELMOHRSuite\Apps\AwardApp\Services\AwardService;
+use App\ELMOHRSuite\Core\Api\SlackClientApi;
 use App\ELMOHRSuite\Core\Helpers\SlackMessageFormatter;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -40,18 +41,31 @@ class LeaderBoardCommand extends AbstractAwardsCommandBase
      */
     public function process()
     {
-        return '22';
         Log::info('ss');
-        return '22';
-        $service        = new AwardService();
+        $service = new AwardService();
+        $data    = $service->getTopFiveCookies();
 
-        Log::info('ss');
-        return $service->getTopFiveCookies();
-        $receivedAwards = $service->showMyReceives($this->slackUser->slack_user_id);
+        $slackApi = SlackClientApi::instance(
+            config('slack.awards.client_access_token')
+        );
 
-        if (!$receivedAwards) {
-            return "You don't have any awards received";
+        $result = [];
+        foreach ($data as $item) {
+
+            try {
+                $payload  = $slackApi->getUserInfo($item->receiver);
+                $row      = [
+                    'total'    => $item->total,
+                    'receiver' => $item->receiver,
+                    'image'    => $payload['user']['profile']['image_32']
+                ];
+                $result[] = $row;
+            } catch (\Exception $e) {
+                continue;
+            }
+
         }
+
 
         $blocks = [
             [
@@ -59,76 +73,32 @@ class LeaderBoardCommand extends AbstractAwardsCommandBase
                 'text' =>
                     [
                         'type' => 'mrkdwn',
-                        'text' => '*Your receive(s): *'
+                        'text' => '*Leaderboard*'
                     ]
             ],
             [
                 'type' => 'divider'
             ],
-            [
-                'type' => 'section',
-                'text' =>
-                    [
-                        'type' => 'mrkdwn',
-                        'text' => SlackMessageFormatter::withParagraphs(
-
-                            ':trophy:' . SlackMessageFormatter::inlineBoldText($service->getTotalEmployeeOfTheMonth($this->slackUser->slack_user_id)),
-                            '',
-                            ':first_place_medal:' . SlackMessageFormatter::inlineBoldText($service->getTotalHighPerformance($this->slackUser->slack_user_id)),
-                            '',
-                            ':cookie:' . SlackMessageFormatter::inlineBoldText($service->getTotalTeamRecognition($this->slackUser->slack_user_id))
-                        )
-                    ]
-            ],
-            [
-                'type' => 'divider'
-            ]
         ];
 
 
-        foreach ($receivedAwards as $receivedAward) {
+        foreach (collect($result)->sortByDesc('total') as $key => $item) {
             $blocks[] =
                 [
-                    'type'   => 'section',
-                    'fields' =>
+                    'type'      => 'section',
+                    'text'      =>
                         [
-                            [
-                                'type' => 'mrkdwn',
-                                'text' => SlackMessageFormatter::withParagraphs(
-                                    '*Type*',
-                                    $receivedAward->emoji
-                                )
-                            ],
-                            [
-                                'type' => 'mrkdwn',
-                                'text' => SlackMessageFormatter::withParagraphs(
-                                    '*Sender*',
-                                    $receivedAward->sender_slack_format
-                                )
-                            ],
-                            [
-                                'type' => 'mrkdwn',
-                                'text' => SlackMessageFormatter::withParagraphs(
-                                    '*Quantity*',
-                                    SlackMessageFormatter::inlineBoldText($receivedAward->quantity)
-                                )
-                            ],
-                            [
-                                'type' => 'mrkdwn',
-                                'text' => SlackMessageFormatter::withParagraphs(
-                                    '*When*',
-                                    Carbon::parse($receivedAward->sent_at)->format('H:m a, d/m/y')
-                                )
-                            ],
-                            [
-                                'type' => 'mrkdwn',
-                                'text' => SlackMessageFormatter::withParagraphs(
-                                    '*Reason*',
-                                    $receivedAward->reason
-                                )
-                            ],
+                            'type' => "mrkdwn",
+                            'text' => SlackMessageFormatter::withParagraphs(
+                                SlackMessageFormatter::mentionUserId($item['receiver']),
+                                ' :cookie: ' . SlackMessageFormatter::inlineBoldText($item['total']))
+                        ],
+                    'accessory' => [
+                        'type'      => 'image',
+                        'image_url' => $item['image'],
+                        'alt_text'  => 'profile image'
+                    ]
 
-                        ]
                 ];
 
             $blocks[] = [
