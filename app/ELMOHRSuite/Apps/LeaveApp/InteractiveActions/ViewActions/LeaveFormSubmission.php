@@ -50,7 +50,7 @@ class LeaveFormSubmission extends AbstractInteractive
     public function handle()
     {
 
-        $api = SlackClientApi::instance(
+        $api = SlackBotApi::instance(
             config('slack.leave.client_access_token')
         );
 
@@ -166,17 +166,17 @@ class LeaveFormSubmission extends AbstractInteractive
                                 1 =>
                                     array(
                                         'type' => 'mrkdwn',
-                                        'text' => ':clock1030: *End Date*',
+                                        'text' => ':clock1030: *Duration*',
                                     ),
                                 2 =>
                                     array(
                                         'type' => 'mrkdwn',
-                                        'text' => Carbon::parse($data['start_date'])->format('Y-m-d'),
+                                        'text' => $data['start_date'],
                                     ),
                                 3 =>
                                     array(
                                         'type' => 'mrkdwn',
-                                        'text' => Carbon::parse($data['start_date'])->addDays($data['days'])->format('Y-m-d'),
+                                        'text' => $data['days']. ' days',
                                     ),
                             ),
                     ),
@@ -198,7 +198,7 @@ class LeaveFormSubmission extends AbstractInteractive
                                 2 =>
                                     array(
                                         'type' => 'mrkdwn',
-                                        'text' => Carbon::now()->format('Y-m-d'),
+                                        'text' => Carbon::now()->format('d/m/Y'),
                                     ),
                                 3 =>
                                     array(
@@ -262,7 +262,7 @@ class LeaveFormSubmission extends AbstractInteractive
 
         $slackBotApi->postMessage(
             [
-                'as_user' => true,
+                'as_user' => false,
                 'channel' => $channelId,
                 'text'    => '@here ' . $user .
                     ' from ' . $this->teamMapping[$data['team']] . ' team has requested a ' .

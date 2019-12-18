@@ -84,15 +84,33 @@ class SlackBotApi
     }
 
     /**
-     * https://api.slack.com/methods/chat.postMessage
-     * @param array $message
-     * @return mixed
-     */
+ * https://api.slack.com/methods/chat.postMessage
+ * @param array $message
+ * @return mixed
+ */
     public function postMessage(array $message)
     {
         $res = $this->http->request(
             'post',
             'chat.postMessage', [
+            'json' => $message
+        ]);
+//        Log::info($slackMessage->getBlocks()->getNumberOfBlocks());
+        Log::info(json_decode($res->getBody()->getContents(), 1));
+        return json_decode($res->getBody()->getContents(), 1);
+    }
+
+    /**
+     * https://api.slack.com/methods/chat.postMessage
+     * @param array $message
+     * @return mixed
+     */
+    public function updateMessageByUrl(array $message, $url)
+    {
+        echo $url;
+        $res = $this->http->request(
+            'post',
+            $url, [
             'json' => $message
         ]);
 //        Log::info($slackMessage->getBlocks()->getNumberOfBlocks());
