@@ -54,6 +54,7 @@ class LeaderBoardCommand extends AbstractAwardsCommandBase
 
             try {
                 $payload  = $slackApi->getUserInfo($item->receiver);
+                Log::error($payload);
                 $row      = [
                     'total'    => $item->total,
                     'receiver' => $item->receiver,
