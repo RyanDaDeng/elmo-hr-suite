@@ -114,7 +114,7 @@ class AwardService
             return false;
         }
 
-        $slackSender->high_performance_balance--;
+        $slackSender->high_performance_balance = $slackSender->high_performance_balance - $quantity;
         $slackSender->save();
         // send award
         return $this->sendAward([
@@ -140,7 +140,7 @@ class AwardService
             return false;
         }
         // decrement balance
-        $slackSender->employee_of_the_month_balance--;
+        $slackSender->employee_of_the_month_balance = $slackSender->employee_of_the_month_balance - $quantity;
         $slackSender->save();
 
         // send award
