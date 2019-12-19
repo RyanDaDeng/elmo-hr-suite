@@ -61,6 +61,7 @@ class LeaderBoardCommand extends AbstractAwardsCommandBase
                 ];
                 $result[] = $row;
             } catch (\Exception $e) {
+                Log::error($e);
                 continue;
             }
 
