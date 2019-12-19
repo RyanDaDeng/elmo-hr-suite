@@ -19,7 +19,7 @@ class CookieInMessage extends AbstractSlackEvent
 
     public $mentionedUsers = [];
 
-    public $notificationChannel = 'CRSCFAWVB'; //todo hard-coded
+    public $notificationChannel = 'CRVK9C1RN'; //todo hard-coded
 
     public function validate(): bool
     {
