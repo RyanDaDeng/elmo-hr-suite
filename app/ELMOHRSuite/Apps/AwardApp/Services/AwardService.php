@@ -208,8 +208,9 @@ class AwardService
             )
             ->where('category', Award::TEAM_RECOGNITION)
             ->groupBy('receiver')
-            ->limit(5)
             ->get()
+            ->sortByDesc('total')
+            ->take(5)
             ->toArray();
     }
 }
