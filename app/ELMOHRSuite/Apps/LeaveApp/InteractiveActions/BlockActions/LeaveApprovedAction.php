@@ -73,7 +73,8 @@ class LeaveApprovedAction extends AbstractInteractive
      */
     public function sendPostMessage($channelId, SlackBotApi $slackBotApi, array $data, $url): void
     {
-        $user    = SlackMessageFormatter::mentionUserId($this->payload['user']['id']);
+        $user    = SlackMessageFormatter::mentionUserId($data['user']);
+        $manager = SlackMessageFormatter::mentionUserId($data['manager']);
 
         $blocks =
             array(
@@ -167,7 +168,7 @@ class LeaveApprovedAction extends AbstractInteractive
                                 3 =>
                                     array(
                                         'type' => 'mrkdwn',
-                                        'text' => $user,
+                                        'text' => $manager,
                                     ),
                             ),
                     ),

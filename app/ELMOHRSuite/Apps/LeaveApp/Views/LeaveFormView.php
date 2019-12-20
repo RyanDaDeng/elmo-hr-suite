@@ -123,21 +123,21 @@ class LeaveFormView extends AbstractSlackView
                                         [
                                             'text' => [
                                                 'type' => 'plain_text',
-                                                'text' => 'Annual leave'
+                                                'text' => ':beach_with_umbrella: Annual leave '
                                             ],
                                             'value' => 'AL'
                                         ],
                                         [
                                             'text' => [
                                                 'type' => 'plain_text',
-                                                'text' => 'Sick leave'
+                                                'text' => ':hospital: Sick leave'
                                             ],
                                             'value' => 'SL'
                                         ],
                                         [
                                             'text' => [
                                                 'type' => 'plain_text',
-                                                'text' => 'Work from home leave'
+                                                'text' => ':house: Work from home leave'
                                             ],
                                             'value' => 'HL'
                                         ]

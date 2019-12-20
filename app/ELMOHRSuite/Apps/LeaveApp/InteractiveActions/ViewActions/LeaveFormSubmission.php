@@ -104,6 +104,7 @@ class LeaveFormSubmission extends AbstractInteractive
         $manager = SlackMessageFormatter::mentionUserId($data['manager']);
         $user    = SlackMessageFormatter::mentionUserId($this->payload['user']['id']);
 
+        $data['user'] = $this->payload['user']['id'];
         $endDate = date('d/m/Y', strtotime("+ {$data['days']} day", strtotime($data['start_date'])));
 
         $payloadData = [
@@ -203,7 +204,7 @@ class LeaveFormSubmission extends AbstractInteractive
                                 3 =>
                                     array(
                                         'type' => 'mrkdwn',
-                                        'text' => $user,
+                                        'text' => $manager,
                                     ),
                             ),
                     ),
