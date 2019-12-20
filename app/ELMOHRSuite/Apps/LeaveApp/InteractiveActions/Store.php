@@ -11,6 +11,7 @@ namespace App\ELMOHRSuite\Apps\LeaveApp\InteractiveActions;
 
 class Store
 {
-
     const LEAVE_SUBMISSION_ACTION = 'LEAVE_SUBMISSION_ACTION';
+    const LEAVE_APPROVED_ACTION   = 'LeaveApprovedAction';
+    const LEAVE_DECLINED_ACTION   = 'LeaveDeclinedAction';
 }

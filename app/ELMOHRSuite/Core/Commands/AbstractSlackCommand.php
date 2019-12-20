@@ -10,6 +10,7 @@ namespace App\ELMOHRSuite\Core\Commands;
 
 
 use App\ELMOHRSuite\Core\Helpers\SlackMessageFormatter;
+use Illuminate\Support\Facades\Log;
 
 abstract class AbstractSlackCommand
 {
@@ -104,6 +105,7 @@ abstract class AbstractSlackCommand
             return $this->handle();
         } catch (\Exception $e) {
             throw $e;
+            Log::error($e);
             return 'Server has some errors.';
         }
     }

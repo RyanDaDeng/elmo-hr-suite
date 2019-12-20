@@ -35,12 +35,11 @@ class SlackController extends Controller
      */
     public function command(Request $request)
     {
-        // return (new AwardsGroupCommand($request->all()))->execute();
-        return (new OpenAwardCommand($request->all()))->execute();
+        return (new AwardsGroupCommand($request->all()))->execute();
     }
 
     public function interactive(Request $request)
     {
-        return (new AwardInteractiveManager(json_decode($request->all()['payload'], 1)))->process();
+        return (new AwardInteractiveManager(json_decode($request->all()['payload'], true)))->process();
     }
 }

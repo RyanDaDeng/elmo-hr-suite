@@ -9,6 +9,7 @@
 namespace App\ELMOHRSuite\Core\InteractiveManager;
 
 
+use App\ELMOHRSuite\Apps\LeaveApp\InteractiveActions\BlockActions\LeaveApprovedAction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 
@@ -66,6 +67,7 @@ class AbstractInteractiveManager
                 }
                 break;
             case 'block_actions':
+                $class = $this->resolve("App\ELMOHRSuite\Apps\LeaveApp\InteractiveActions\BlockActions".'\\' .$this->payload['actions'][0]['action_id']);
 
                 break;
             case'dialog_submission':

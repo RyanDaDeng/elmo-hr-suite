@@ -27,13 +27,15 @@ abstract class AbstractSlackView
 
     /**
      * @param array $body
+     * @param array $rules
      * @return ViewResponse
      */
-    public function validate(array $body)
+    public function validate(array $body, $rules = [])
     {
         $data = $this->collectData($body);
 
-        $validator = Validator::make($data, $this->rules());
+        $finalRules = array_merge($rules, $this->rules());
+        $validator  = Validator::make($data,$finalRules);
 
         $errorBug = ViewResponse::create();
         $errorBug->setData($data);

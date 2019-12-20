@@ -8,9 +8,12 @@
 
 namespace App\ELMOHRSuite\Apps\AwardApp\Commands\Collection;
 
-use App\ELMOHRSuite\Core\Commands\AbstractSlackCommand;
+use App\ELMOHRSuite\Apps\AwardApp\Commands\AbstractAwardsCommandBase;
+use App\ELMOHRSuite\Core\Api\SlackClientApi;
+use App\ELMOHRSuite\Core\Helpers\SlackMessageFormatter;
 
-class CookiesBalanceCommand extends AbstractSlackCommand
+
+class CookiesBalanceCommand extends AbstractAwardsCommandBase
 {
 
     /**
@@ -36,6 +39,52 @@ class CookiesBalanceCommand extends AbstractSlackCommand
      */
     public function process()
     {
-        return 'OMG, you are so rich, you have infinite cookies.';
+        $message = [
+            'text'   => 'Hey, you have the following balance:',
+            'blocks' => [
+                [
+                    'type' => 'section',
+                    'text' =>
+                        [
+                            'type' => 'mrkdwn',
+                            'text' => '*Your remaining balance: *'
+
+                        ]
+                ],
+
+                [
+                    'type' => 'divider'
+                ],
+                [
+                    'type' => 'section',
+                    'text' =>
+                        [
+                            'type' => 'mrkdwn',
+                            'text' =>
+                                ':first_place_medal: *High Performance Balance* : ' . SlackMessageFormatter::inlineBoldText($this->slackUser->high_performance_balance) . ' vote(s)'
+
+                        ]
+                ],
+                [
+                    'type' => 'divider'
+                ],
+                [
+                    'type' => 'section',
+                    'text' =>
+                        [
+                            'type' => 'mrkdwn',
+                            'text' =>
+                                ':trophy: *Employee of The Month Balance* : ' . SlackMessageFormatter::inlineBoldText($this->slackUser->employee_of_the_month_balance) . ' vote(s)'
+
+                        ]
+                ],
+                [
+                    'type' => 'divider'
+                ]
+            ]
+        ];
+
+
+        return $message;
     }
 }

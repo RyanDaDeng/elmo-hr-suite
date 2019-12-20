@@ -74,6 +74,17 @@ class SlackClientApi
         return false;
     }
 
+    public function getUserInfo($slackUserId){
+        $res = $this->http->request(
+            'get',
+            'users.info', [
+            'query' => [
+                'user'    => $slackUserId,
+            ]
+        ]);
+     //   Log::info(json_decode($res->getBody()->getContents(), 1));
+        return json_decode($res->getBody()->getContents(), 1);
+    }
 
     public function postMessageToChannel($messages)
     {
@@ -82,6 +93,7 @@ class SlackClientApi
             'chat.postMessage', [
             'json' => $messages
         ]);
+        Log::info(json_decode($res->getBody()->getContents(), 1));
         return json_decode($res->getBody()->getContents(), 1);
     }
 
