@@ -30,7 +30,7 @@ class AwardFormSubmission extends AbstractInteractive
 
     public function handle()
     {
-        $notificationChannel = 'CRSCFAWVB';
+        $notificationChannel = 'CRVK9C1RN';
         $payload             = $this->payload;
 
         /**
