@@ -195,4 +195,28 @@ class SlackMessageFormatter
         }
         return $res;
     }
+
+    public static function collectData($view)
+    {
+        $data = [];
+
+        foreach ($view['view']['state'] as $blockId => $fields) {
+            foreach ($fields as $fieldId => $field) {
+                $value = $field[$fieldId];
+                switch ($value['type']) {
+                    case 'static_select':
+                        $data[$fieldId] = $value['selected_option']['value'];
+                        break;
+                    case 'plain_text_input':
+                        $data[$fieldId] = $value['value'];
+                        break;
+                    case 'users_select':
+                        $data[$fieldId] = $value['selected_user'];
+                        break;
+                }
+            }
+        }
+
+        return $data;
+    }
 }

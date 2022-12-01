@@ -8,9 +8,14 @@
 
 namespace App\ELMOHRSuite\Apps\AwardApp\Commands\Collection;
 
-use App\ELMOHRSuite\Core\Commands\AbstractSlackCommand;
+use App\ELMOHRSuite\Apps\AwardApp\Commands\AbstractAwardsCommandBase;
+use App\ELMOHRSuite\Apps\AwardApp\Services\AwardService;
+use App\ELMOHRSuite\Core\Api\SlackClientApi;
+use App\ELMOHRSuite\Core\Helpers\SlackMessageFormatter;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
-class LeaderBoardCommand extends AbstractSlackCommand
+class LeaderBoardCommand extends AbstractAwardsCommandBase
 {
 
     /**
@@ -36,6 +41,76 @@ class LeaderBoardCommand extends AbstractSlackCommand
      */
     public function process()
     {
-        return 'You are not allowed to see the result.';
+        Log::info('ss');
+        $service = new AwardService();
+        $data    = $service->getTopFiveCookies();
+
+        $slackApi = SlackClientApi::instance(
+            config('slack.awards.client_access_token')
+        );
+
+        $result = [];
+        foreach ($data as $item) {
+
+            try {
+                $payload  = $slackApi->getUserInfo($item->receiver);
+                Log::error($payload);
+                $row      = [
+                    'total'    => $item->total,
+                    'receiver' => $item->receiver,
+                    'image'    => $payload['user']['profile']['image_32']
+                ];
+                $result[] = $row;
+            } catch (\Exception $e) {
+                Log::error($e);
+                continue;
+            }
+
+        }
+
+
+        $blocks = [
+            [
+                'type' => 'section',
+                'text' =>
+                    [
+                        'type' => 'mrkdwn',
+                        'text' => '*Leaderboard*'
+                    ]
+            ],
+            [
+                'type' => 'divider'
+            ],
+        ];
+
+
+        foreach (collect($result)->sortByDesc('total') as $key => $item) {
+            $blocks[] =
+                [
+                    'type'      => 'section',
+                    'text'      =>
+                        [
+                            'type' => "mrkdwn",
+                            'text' => SlackMessageFormatter::withParagraphs(
+                                SlackMessageFormatter::mentionUserId($item['receiver']),
+                                ' :cookie: ' . SlackMessageFormatter::inlineBoldText($item['total']))
+                        ],
+                    'accessory' => [
+                        'type'      => 'image',
+                        'image_url' => $item['image'],
+                        'alt_text'  => 'profile image'
+                    ]
+
+                ];
+
+            $blocks[] = [
+                'type' => 'divider'
+            ];
+        }
+
+        return [
+            'text'   => 'The awards you received:',
+            'blocks' => $blocks
+        ];
     }
 }
